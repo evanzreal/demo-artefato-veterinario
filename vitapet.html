@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VitaPet — Assistente de Atendimento com IA · BIOS Consulting Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#3D6B5E;
+  --pine:#2D5247;
+  --sage:#8FBFB2;
+  --moss:#A8D4C8;
+  --mist:#D4EDE8;
+  --dew:#EBF6F3;
+  --terracotta:#C07A5A;
+  --clay:#D9906F;
+  --cream:#EDE6D6;
+  --parchment:#F7F4EF;
+  --ink:#1C1F1A;
+  --stone:#6B7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--dew);}
+::-webkit-scrollbar-thumb{background:var(--sage);border-radius:3px;}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes phoneIn{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes pawBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:1000;background:var(--pine);border-bottom:2px solid var(--sage);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:12px;}
+.nav-circle{width:36px;height:36px;background:var(--sage);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.nav-title{font-family:'Playfair Display',serif;font-size:16px;color:#fff;line-height:1.2;}
+.nav-sub{font-size:10px;color:var(--moss);letter-spacing:.1em;text-transform:uppercase;font-weight:300;}
+.nav-links{display:flex;gap:4px;}
+.nav-btn{background:transparent;border:1px solid transparent;border-radius:8px;padding:7px 16px;color:rgba(255,255,255,.6);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;text-decoration:none;}
+.nav-btn:hover,.nav-btn.active{background:rgba(143,191,178,.18);border-color:rgba(143,191,178,.4);color:var(--sage);font-weight:600;}
+.nav-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--moss);opacity:.6;text-align:right;}
+
+/* ── HERO ── */
+.hero{background:var(--pine);padding:100px 40px 80px;text-align:center;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,rgba(143,191,178,.12) 0%,transparent 60%),radial-gradient(ellipse at 70% 30%,rgba(61,107,94,.2) 0%,transparent 50%);pointer-events:none;}
+.hero-paws{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;align-items:flex-end;opacity:.06;pointer-events:none;font-size:48px;}
+.hero-badge{display:inline-block;padding:4px 14px;background:rgba(143,191,178,.15);border:1px solid rgba(143,191,178,.3);border-radius:20px;font-size:11px;color:var(--moss);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;font-family:'DM Mono',monospace;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,52px);color:#fff;line-height:1.15;margin-bottom:16px;}
+.hero p{font-size:16px;color:rgba(255,255,255,.55);max-width:540px;margin:0 auto 40px;line-height:1.7;font-weight:300;}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.hero-btn{padding:11px 22px;background:rgba(143,191,178,.12);border:1px solid rgba(143,191,178,.3);border-radius:10px;color:var(--sage);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s;display:flex;align-items:center;gap:8px;text-decoration:none;}
+.hero-btn:hover{background:rgba(143,191,178,.22);}
+
+/* ── CHAT MOCKUP ── */
+.chat-phone{width:100%;max-width:360px;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.22),0 0 0 8px #1a1a1a,0 0 0 10px #2a2a2a;animation:phoneIn .7s cubic-bezier(.22,1,.36,1) both;margin:0 auto;}
+.chat-head{background:var(--forest);padding:12px 16px;display:flex;align-items:center;gap:12px;}
+.chat-avatar{width:38px;height:38px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.chat-body{background:#F0EDE8;padding:14px 12px;min-height:400px;}
+.chat-foot{background:#F0F0F0;padding:10px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid #ddd;}
+.bubble-bot{display:flex;justify-content:flex-start;margin-bottom:6px;}
+.bubble-user{display:flex;justify-content:flex-end;margin-bottom:6px;}
+.bbl-bot{max-width:82%;padding:9px 12px;background:#fff;color:#111;border-radius:0 10px 10px 10px;box-shadow:0 1px 2px rgba(0,0,0,.08);font-size:13px;line-height:1.5;}
+.bbl-user{max-width:82%;padding:9px 12px;background:#D0EBE5;color:#1a3d2b;border-radius:10px 0 10px 10px;box-shadow:0 1px 2px rgba(0,0,0,.08);font-size:13px;line-height:1.5;}
+.btime{font-size:10px;color:#aaa;text-align:right;margin-top:3px;}
+.bbl-typing{padding:9px 12px;background:#fff;border-radius:0 10px 10px 10px;display:inline-flex;gap:4px;align-items:center;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--sage);animation:pawBounce 1.2s infinite;}
+.dot:nth-child(2){animation-delay:.2s;}
+.dot:nth-child(3){animation-delay:.4s;}
+.quick-reply{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.qr-btn{padding:5px 12px;background:var(--dew);border:1px solid var(--sage);border-radius:20px;font-size:12px;color:var(--forest);font-family:'DM Sans',sans-serif;cursor:pointer;transition:background .15s;}
+.qr-btn:hover{background:var(--mist);}
+
+/* ── SECTION ── */
+.sec-head{padding:60px 48px 40px;border-bottom:1px solid #e5e7eb;}
+.sec-head.light{background:linear-gradient(180deg,#f0ede8 0%,var(--parchment) 100%);}
+.sec-head.mid{background:linear-gradient(180deg,#e8e4de 0%,#f0ede8 100%);}
+.sec-head.dark{background:linear-gradient(180deg,#eae7e2 0%,var(--parchment) 100%);}
+.sec-head.green{background:linear-gradient(180deg,#e6f0ee 0%,#f0ede8 100%);}
+.sec-inner{max-width:1400px;margin:0 auto;}
+.sec-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:var(--dew);border:1px solid var(--mist);border-radius:20px;font-size:11px;color:var(--pine);font-family:'DM Mono',monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
+.sec-title{font-family:'Playfair Display',serif;font-size:36px;color:var(--pine);line-height:1.2;}
+.sec-desc{font-size:14px;color:var(--stone);font-weight:300;max-width:500px;line-height:1.7;margin-top:8px;}
+
+/* ── CANVAS ── */
+.canvas{padding:40px 48px;max-width:1400px;margin:0 auto;}
+.canvas-mid{padding:60px 48px;max-width:1300px;margin:0 auto;}
+.block{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:28px 32px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.04);animation:slideUp .5s ease both;}
+
+/* ── FEATURE CARDS ── */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.feat-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:28px 24px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:transform .2s,box-shadow .2s;animation:slideUp .5s ease both;}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(61,107,94,.12);}
+.feat-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;}
+.feat-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--pine);margin-bottom:8px;}
+.feat-desc{font-size:13px;color:var(--stone);line-height:1.7;font-weight:300;}
+.feat-tag{display:inline-block;margin-top:12px;padding:3px 10px;border-radius:20px;font-size:10px;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.06em;text-transform:uppercase;}
+
+/* ── BEFORE/AFTER ── */
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.ba-card{border-radius:16px;padding:28px 28px;border:2px solid;}
+.ba-card.before{background:#FDF5F2;border-color:#E8C4B8;}
+.ba-card.after{background:#EBF6F3;border-color:var(--mist);}
+.ba-title{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:18px;}
+.ba-list{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.ba-list li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;}
+.ba-list li .icon{flex-shrink:0;font-size:16px;margin-top:1px;}
+.ba-metric{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;}
+.ba-stat{border-radius:10px;padding:12px 14px;text-align:center;}
+
+/* ── FAQ ── */
+.faq-list{display:flex;flex-direction:column;gap:12px;}
+.faq-item{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;transition:box-shadow .2s;}
+.faq-item:hover{box-shadow:0 4px 16px rgba(61,107,94,.08);}
+.faq-q{padding:18px 22px;font-size:14px;font-weight:500;color:var(--pine);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;user-select:none;}
+.faq-q:hover{background:var(--dew);}
+.faq-chevron{font-size:16px;color:var(--sage);transition:transform .3s;flex-shrink:0;}
+.faq-a{display:none;padding:0 22px 18px;font-size:13.5px;color:var(--stone);line-height:1.7;font-weight:300;border-top:1px solid var(--dew);}
+.faq-a.open{display:block;}
+.faq-item.open .faq-chevron{transform:rotate(180deg);}
+
+/* ── GANTT ── */
+.gantt{background:#fff;border-radius:16px;border:1px solid #e5e7eb;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:16px;}
+.gantt-head{display:grid;grid-template-columns:200px 1fr 1fr 1fr;background:var(--pine);border-bottom:2px solid var(--sage);}
+.gantt-row{display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid #f0f0f0;min-height:50px;}
+.gantt-divider{display:grid;grid-template-columns:200px 1fr 1fr 1fr;background:var(--dew);border-bottom:1px solid #d1d5db;}
+.gantt-label{padding:10px 18px;font-size:12px;font-weight:500;color:var(--pine);border-right:2px solid var(--dew);display:flex;align-items:center;gap:8px;}
+.gantt-cell{padding:10px 8px;display:flex;align-items:center;border-right:1px solid #e5e7eb;}
+.gantt-bar{height:26px;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ── STATUS GRID ── */
+.status-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:48px;}
+.status-card{border-radius:14px;padding:20px 16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:transform .15s;cursor:default;}
+.status-card:hover{transform:translateY(-2px);}
+
+/* ── FOOTER ── */
+footer{background:var(--pine);border-top:2px solid var(--sage);padding:28px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .nav{padding:0 20px;gap:8px;}
+  .nav-links{gap:2px;flex-wrap:wrap;}
+  .nav-btn{padding:5px 10px;font-size:11px;}
+  .nav-meta{display:none;}
+  .hero{padding:60px 24px 50px;}
+  .sec-head{padding:40px 24px 28px;}
+  .sec-title{font-size:28px;}
+  .canvas,.canvas-mid{padding:28px 20px;}
+  .feat-grid{grid-template-columns:repeat(2,1fr);}
+  .ba-grid{grid-template-columns:1fr;}
+  .status-grid{grid-template-columns:repeat(2,1fr);}
+  .gantt-head,.gantt-row,.gantt-divider{grid-template-columns:150px 1fr 1fr 1fr;}
+  footer{padding:20px 24px;}
+}
+@media(max-width:768px){
+  .nav{height:auto;min-height:56px;flex-wrap:wrap;padding:10px 16px;gap:6px;}
+  .nav-links{width:100%;justify-content:center;overflow-x:auto;flex-wrap:nowrap;gap:2px;padding-bottom:4px;}
+  .nav-btn{padding:5px 8px;font-size:10px;white-space:nowrap;}
+  .hero h1{font-size:clamp(24px,7vw,36px);}
+  .hero p{font-size:14px;}
+  .hero-btns{flex-direction:column;align-items:center;}
+  .sec-head{padding:32px 16px 24px;}
+  .sec-title{font-size:24px;}
+  .canvas,.canvas-mid{padding:20px 16px;}
+  .feat-grid{grid-template-columns:1fr;}
+  .ba-grid{grid-template-columns:1fr;}
+  .ba-metric{grid-template-columns:1fr 1fr;}
+  .status-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .chat-phone{max-width:100%;border-radius:18px;}
+  .gantt{overflow-x:auto;}
+  .gantt-head,.gantt-row,.gantt-divider{min-width:560px;grid-template-columns:140px 1fr 1fr 1fr;}
+  footer{padding:16px;flex-direction:column;text-align:center;gap:8px;}
+}
+@media(max-width:480px){
+  .nav{padding:8px 12px;}
+  .hero{padding:40px 16px 36px;}
+  .hero h1{font-size:clamp(20px,6vw,28px);}
+  .sec-head{padding:24px 12px 20px;}
+  .sec-title{font-size:20px;}
+  .canvas,.canvas-mid{padding:16px 12px;}
+  .status-grid{grid-template-columns:1fr 1fr;gap:8px;}
+  .feat-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-circle">🐾</div>
+    <div>
+      <div class="nav-title">VitaPet Clínica Veterinária</div>
+      <div class="nav-sub">Assistente de Atendimento com IA</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a class="nav-btn active" href="#vita">🤖 Vita</a>
+    <a class="nav-btn" href="#funcionalidades">⚡ Funcionalidades</a>
+    <a class="nav-btn" href="#comparativo">📊 Comparativo</a>
+    <a class="nav-btn" href="#faq">💬 FAQ</a>
+    <a class="nav-btn" href="#plano">📅 Próximos Passos</a>
+  </div>
+  <div class="nav-meta">BIOS Consulting Group × VitaPet · 2026</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="vita" style="scroll-margin-top:64px">
+  <div class="hero-bg"></div>
+  <div class="hero-paws">
+    <span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span>
+  </div>
+  <div style="position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;max-width:1100px;margin:0 auto;align-items:center;text-align:left;">
+    <div>
+      <div class="hero-badge">Demo · Proposta Comercial</div>
+      <h1>Conheça a <em style="color:var(--sage)">Vita</em>,<br>sua assistente<br>veterinária com IA</h1>
+      <p>Agendamentos, orientações pós-consulta, lembretes de vacina e suporte em emergências — 24h por dia, 7 dias por semana, via WhatsApp. Sem fila. Sem espera.</p>
+      <div class="hero-btns" style="justify-content:flex-start;">
+        <a class="hero-btn" href="#funcionalidades">⚡ Ver funcionalidades</a>
+        <a class="hero-btn" href="#comparativo">📊 Ver impacto</a>
+        <a class="hero-btn" href="#plano">📅 Próximos passos</a>
+      </div>
+      <div style="display:flex;gap:28px;margin-top:32px;">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:28px;color:#fff;">97%</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);font-weight:300;">satisfação dos tutores</div>
+        </div>
+        <div style="width:1px;background:rgba(255,255,255,.1);"></div>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:28px;color:#fff;">3x</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);font-weight:300;">mais agendamentos</div>
+        </div>
+        <div style="width:1px;background:rgba(255,255,255,.1);"></div>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:28px;color:#fff;">24h</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);font-weight:300;">disponibilidade</div>
+        </div>
+      </div>
+    </div>
+    <!-- CHAT MOCKUP -->
+    <div style="animation:phoneIn .8s cubic-bezier(.22,1,.36,1) both;animation-delay:.2s;">
+      <div class="chat-phone">
+        <!-- Header -->
+        <div class="chat-head">
+          <div class="chat-avatar">🐾</div>
+          <div>
+            <div style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;color:#fff;">Vita · VitaPet</div>
+            <div style="font-size:11px;color:var(--moss);">● Online agora</div>
+          </div>
+          <div style="margin-left:auto;font-size:18px;">📞</div>
+        </div>
+        <!-- Chat body -->
+        <div class="chat-body">
+          <div class="bubble-bot">
+            <div class="bbl-bot">
+              Olá! 👋 Sou a <strong>Vita</strong>, assistente da VitaPet.<br>Como posso ajudar você e seu pet hoje?
+              <div class="quick-reply">
+                <span class="qr-btn">📅 Agendar consulta</span>
+                <span class="qr-btn">💉 Vacinas</span>
+                <span class="qr-btn">🆘 Emergência</span>
+              </div>
+              <div class="btime">09:12 ✓✓</div>
+            </div>
+          </div>
+          <div class="bubble-user">
+            <div class="bbl-user">
+              Preciso agendar uma consulta para o meu cachorro, ele está coçando muito.
+              <div class="btime">09:13 ✓✓</div>
+            </div>
+          </div>
+          <div class="bubble-bot">
+            <div class="bbl-bot">
+              Entendo! Coceira pode ter várias causas — vamos agendar logo para o Dr. Rafael examinar. 🐕<br><br>
+              <strong>Qual o nome e a espécie do seu pet?</strong>
+              <div class="btime">09:13 ✓✓</div>
+            </div>
+          </div>
+          <div class="bubble-user">
+            <div class="bbl-user">
+              Bidu, Golden Retriever, 3 anos 🐶
+              <div class="btime">09:14 ✓✓</div>
+            </div>
+          </div>
+          <div class="bubble-bot">
+            <div class="bbl-bot">
+              Ótimo, o Bidu está cadastrado! 🐾<br><br>
+              Temos estes horários disponíveis esta semana:<br>
+              <div style="margin-top:8px;display:flex;flex-direction:column;gap:4px;">
+                <div style="padding:6px 10px;background:var(--dew);border-radius:8px;font-size:12px;border-left:3px solid var(--sage);">Terça-feira, 08/04 às 14h00</div>
+                <div style="padding:6px 10px;background:var(--dew);border-radius:8px;font-size:12px;border-left:3px solid var(--sage);">Quarta-feira, 09/04 às 10h30</div>
+                <div style="padding:6px 10px;background:var(--dew);border-radius:8px;font-size:12px;border-left:3px solid var(--sage);">Quinta-feira, 10/04 às 16h00</div>
+              </div>
+              <div class="btime">09:14 ✓✓</div>
+            </div>
+          </div>
+          <div class="bubble-bot">
+            <div class="bbl-bot bbl-typing">
+              <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Footer -->
+        <div class="chat-foot">
+          <div style="flex:1;background:#fff;border-radius:20px;padding:8px 14px;font-size:12px;color:#aaa;border:1px solid #e5e7eb;">Digite uma mensagem...</div>
+          <div style="width:34px;height:34px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🎤</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SEÇÃO 1: FUNCIONALIDADES -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="funcionalidades" style="scroll-margin-top:64px;">
+  <div class="sec-head light">
+    <div class="sec-inner">
+      <div class="sec-badge">⚡ &nbsp;01</div>
+      <h2 class="sec-title">O que a Vita faz pela sua clínica</h2>
+      <p class="sec-desc">Seis funcionalidades essenciais que transformam o atendimento veterinário — do primeiro contato à fidelização do tutor.</p>
+    </div>
+  </div>
+  <div class="canvas">
+    <div class="feat-grid">
+
+      <div class="feat-card" style="animation-delay:.05s">
+        <div class="feat-icon" style="background:#EBF6F3;">📅</div>
+        <div class="feat-title">Agendamento Inteligente</div>
+        <p class="feat-desc">A Vita consulta a agenda em tempo real e oferece os próximos horários disponíveis. O tutor confirma direto no chat — sem ligação, sem formulário.</p>
+        <span class="feat-tag" style="background:#EBF6F3;color:var(--forest);">Agenda em tempo real</span>
+      </div>
+
+      <div class="feat-card" style="animation-delay:.1s">
+        <div class="feat-icon" style="background:#FFF7ED;">💉</div>
+        <div class="feat-title">Lembretes de Vacina & Retorno</div>
+        <p class="feat-desc">Envio automático de lembretes personalizados por nome do pet e data. Reduz faltas e mantém o calendário vacinal em dia — sem esforço da equipe.</p>
+        <span class="feat-tag" style="background:#FFF7ED;color:#9A3412;">Prevenção ativa</span>
+      </div>
+
+      <div class="feat-card" style="animation-delay:.15s">
+        <div class="feat-icon" style="background:#FDF5F2;">🆘</div>
+        <div class="feat-title">Triagem de Emergências</div>
+        <p class="feat-desc">Quando o tutor reporta sintomas graves, a Vita identifica urgência, orienta cuidados imediatos e notifica o plantão — priorizando vidas sem gerar pânico.</p>
+        <span class="feat-tag" style="background:#FDF5F2;color:#9D3B2B;">Resposta imediata</span>
+      </div>
+
+      <div class="feat-card" style="animation-delay:.2s">
+        <div class="feat-icon" style="background:#EBF6F3;">🩺</div>
+        <div class="feat-title">Orientações Pós-Consulta</div>
+        <p class="feat-desc">Após cada atendimento, a Vita envia automaticamente as instruções do veterinário: medicação, dieta, repouso e retorno — no horário certo, sem o tutor esquecer.</p>
+        <span class="feat-tag" style="background:#EBF6F3;color:var(--forest);">Adesão ao tratamento</span>
+      </div>
+
+      <div class="feat-card" style="animation-delay:.25s">
+        <div class="feat-icon" style="background:#F5F0FF;">📋</div>
+        <div class="feat-title">Histórico do Pet</div>
+        <p class="feat-desc">A Vita acessa o prontuário completo: vacinas, consultas anteriores, alergias e medicamentos. O tutor tem informações sempre à mão — e o médico também.</p>
+        <span class="feat-tag" style="background:#F5F0FF;color:#6D28D9;">Dados centralizados</span>
+      </div>
+
+      <div class="feat-card" style="animation-delay:.3s">
+        <div class="feat-icon" style="background:#FEFCE8;">🌙</div>
+        <div class="feat-title">Atendimento 24 horas</div>
+        <p class="feat-desc">Fins de semana, feriados, madrugada — a Vita nunca dorme. Dúvidas frequentes, informações sobre a clínica e triagem de urgências sempre disponíveis.</p>
+        <span class="feat-tag" style="background:#FEFCE8;color:#92400E;">Sempre online</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SEÇÃO 2: ANTES & DEPOIS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="comparativo" style="scroll-margin-top:64px;">
+  <div class="sec-head mid">
+    <div class="sec-inner">
+      <div class="sec-badge">📊 &nbsp;02</div>
+      <h2 class="sec-title">Antes & Depois da Vita</h2>
+      <p class="sec-desc">A diferença concreta que uma assistente com IA faz no dia a dia da clínica e na experiência dos tutores.</p>
+    </div>
+  </div>
+  <div class="canvas">
+    <div class="ba-grid">
+
+      <!-- ANTES -->
+      <div class="ba-card before">
+        <div class="ba-title" style="color:#9D3B2B;">😓 Sem a Vita</div>
+        <ul class="ba-list">
+          <li><span class="icon">📞</span><div>Tutores ligam fora do horário e não conseguem atendimento — frustração imediata</div></li>
+          <li><span class="icon">📋</span><div>Recepcionista anota agendamentos no caderno ou em planilha desatualizada</div></li>
+          <li><span class="icon">🔕</span><div>Nenhum lembrete enviado — tutores esquecem consultas e vacinas</div></li>
+          <li><span class="icon">😰</span><div>Tutor não sabe o que fazer em emergências às 22h — vai ao pronto-socorro humano por falta de orientação</div></li>
+          <li><span class="icon">📉</span><div>Alta taxa de absenteísmo — horários vagos que poderiam ser ocupados</div></li>
+          <li><span class="icon">🔁</span><div>Equipe gasta tempo respondendo mesmas dúvidas repetidamente</div></li>
+          <li><span class="icon">📁</span><div>Histórico do pet espalhado em papéis, sistemas diferentes ou memória da recepcionista</div></li>
+        </ul>
+        <div class="ba-metric">
+          <div class="ba-stat" style="background:#FDE8E8;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;color:#9D3B2B;">35%</div>
+            <div style="font-size:11px;color:#9D3B2B;margin-top:2px;">taxa de faltas</div>
+          </div>
+          <div class="ba-stat" style="background:#FDE8E8;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;color:#9D3B2B;">8h</div>
+            <div style="font-size:11px;color:#9D3B2B;margin-top:2px;">atendimento por dia</div>
+          </div>
+          <div class="ba-stat" style="background:#FDE8E8;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;color:#9D3B2B;">72%</div>
+            <div style="font-size:11px;color:#9D3B2B;margin-top:2px;">perguntas repetidas</div>
+          </div>
+          <div class="ba-stat" style="background:#FDE8E8;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;color:#9D3B2B;">0</div>
+            <div style="font-size:11px;color:#9D3B2B;margin-top:2px;">atendimentos noturnos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEPOIS -->
+      <div class="ba-card after">
+        <div class="ba-title" style="color:var(--pine);">🌿 Com a Vita</div>
+        <ul class="ba-list">
+          <li><span class="icon">✅</span><div>Tutor recebe resposta imediata 24h — agendamento feito em menos de 2 minutos</div></li>
+          <li><span class="icon">📅</span><div>Agenda integrada em tempo real — conflitos eliminados, histórico completo</div></li>
+          <li><span class="icon">🔔</span><div>Lembretes automáticos 48h e 24h antes da consulta — taxa de comparecimento dispara</div></li>
+          <li><span class="icon">🏥</span><div>Triagem de emergência guia o tutor com calma e aciona o plantão quando necessário</div></li>
+          <li><span class="icon">📈</span><div>Horários vagos preenchidos automaticamente pela lista de espera gerenciada pela Vita</div></li>
+          <li><span class="icon">⚡</span><div>FAQ automático libera a equipe para o que realmente importa: cuidar dos pets</div></li>
+          <li><span class="icon">🗂️</span><div>Prontuário digital centralizado — acessível pelo tutor e pela equipe em segundos</div></li>
+        </ul>
+        <div class="ba-metric">
+          <div class="ba-stat" style="background:#D0EBE5;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--pine);">&lt;8%</div>
+            <div style="font-size:11px;color:var(--pine);margin-top:2px;">taxa de faltas</div>
+          </div>
+          <div class="ba-stat" style="background:#D0EBE5;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--pine);">24h</div>
+            <div style="font-size:11px;color:var(--pine);margin-top:2px;">atendimento por dia</div>
+          </div>
+          <div class="ba-stat" style="background:#D0EBE5;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--pine);">94%</div>
+            <div style="font-size:11px;color:var(--pine);margin-top:2px;">resolvido na Vita</div>
+          </div>
+          <div class="ba-stat" style="background:#D0EBE5;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--pine);">∞</div>
+            <div style="font-size:11px;color:var(--pine);margin-top:2px;">capacidade noturna</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Destaque impacto financeiro -->
+    <div style="margin-top:24px;padding:24px 28px;background:var(--pine);border-radius:16px;color:#fff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:4px;">Impacto estimado no faturamento</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.6);font-weight:300;">Clínica com 80 consultas/mês, ticket médio R$180 · redução de 27 faltas → receita recuperada</div>
+      </div>
+      <div style="display:flex;gap:24px;">
+        <div style="text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:32px;color:var(--sage);">+R$4.860</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);">por mês</div>
+        </div>
+        <div style="width:1px;background:rgba(255,255,255,.15);"></div>
+        <div style="text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:32px;color:var(--sage);">+R$58.320</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);">por ano</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SEÇÃO 3: FAQ -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="faq" style="scroll-margin-top:64px;">
+  <div class="sec-head green">
+    <div class="sec-inner">
+      <div class="sec-badge">💬 &nbsp;03</div>
+      <h2 class="sec-title">Perguntas frequentes</h2>
+      <p class="sec-desc">As dúvidas mais comuns dos tutores — e como a Vita as responde.</p>
+    </div>
+  </div>
+  <div class="canvas" style="max-width:900px;">
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          🐶 Como funciona o agendamento de consulta pelo WhatsApp?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-a">
+          É simples! Basta enviar uma mensagem para o número da VitaPet e a Vita perguntará o nome do seu pet, espécie, motivo da consulta e preferência de horário. Em seguida, ela mostra os horários disponíveis e confirma o agendamento — tudo no chat, sem precisar ligar ou ir pessoalmente.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          💉 Como recebo o lembrete das vacinas do meu pet?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-a">
+          Após cada vacinação, a Vita registra a data e programa o lembrete automaticamente para quando o reforço estiver próximo. Você receberá uma mensagem no WhatsApp 7 dias e 1 dia antes da data prevista — com o nome do pet e o tipo de vacina para não confundir quando você tem mais de um bichinho.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          🆘 Meu pet está passando mal de madrugada. A Vita pode ajudar?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-a">
+          Sim! A Vita faz uma triagem de emergência 24 horas. Você descreve os sintomas e ela classifica a urgência: se for grave, aciona o plantão e orienta o caminho mais seguro até a clínica ou o pronto-socorro veterinário mais próximo. Se for algo que pode esperar, ela dá orientações de cuidado em casa e agenda a primeira consulta disponível.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          🩺 Posso ver o histórico de consultas do meu pet pelo WhatsApp?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-a">
+          Sim! Peça para a Vita o "histórico do [nome do pet]" e ela vai trazer um resumo das últimas consultas, vacinas aplicadas, medicamentos prescritos e as orientações do veterinário. É como ter o cartão de saúde do seu pet sempre no bolso.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          🔔 Posso cancelar ou remarcar uma consulta pela Vita?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-a">
+          Com certeza! Basta avisar a Vita com antecedência mínima de 2 horas. Ela cancela ou mostra novos horários disponíveis para remarcar na hora — e o horário liberado entra automaticamente na lista de espera para outros tutores.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          🤔 A Vita substitui o atendimento humano da clínica?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-a">
+          Não — e esse não é o objetivo. A Vita cuida das demandas rotineiras (agendamentos, lembretes, dúvidas frequentes, orientações pós-consulta) para que a equipe da VitaPet possa focar no que realmente importa: o cuidado clínico dos animais. Quando uma situação exige um atendente humano, a Vita transfere a conversa imediatamente.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          🐱 A Vita atende outras espécies além de cães e gatos?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-a">
+          Sim! A Vita está preparada para atender tutores de cães, gatos, coelhos, hamsters, aves e outros pequenos animais atendidos pela VitaPet. Para espécies exóticas de maior porte, ela encaminha para o especialista adequado.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SEÇÃO 4: PRÓXIMOS PASSOS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="plano" style="scroll-margin-top:64px;">
+  <div class="sec-head dark">
+    <div class="sec-inner">
+      <div class="sec-badge">📅 &nbsp;04</div>
+      <h2 class="sec-title">Próximos Passos</h2>
+      <p class="sec-desc">Cronograma de implementação em 3 semanas — do setup inicial ao go live da Vita na VitaPet.</p>
+    </div>
+  </div>
+
+  <div style="max-width:1200px;margin:0 auto;padding:60px 48px 80px;">
+
+    <!-- Status dos módulos -->
+    <h3 style="font-family:'Playfair Display',serif;font-size:20px;color:var(--pine);margin-bottom:20px;">🐾 Módulos do Projeto</h3>
+    <div class="status-grid">
+      <div class="status-card" style="border:2px solid var(--sage);background:#EBF6F3;">
+        <div style="font-size:28px;margin-bottom:8px;">🔧</div>
+        <div style="font-weight:600;font-size:13px;color:var(--pine);margin-bottom:6px;">Fluxo Base + CRM</div>
+        <span style="background:var(--sage);color:var(--pine);display:inline-block;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:600;">✓ Concluído</span>
+      </div>
+      <div class="status-card" style="border:2px solid var(--terracotta);background:#FDF5F2;">
+        <div style="font-size:28px;margin-bottom:8px;">📅</div>
+        <div style="font-weight:600;font-size:13px;color:var(--pine);margin-bottom:6px;">Agendamentos</div>
+        <span style="background:var(--terracotta);color:#fff;display:inline-block;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:600;">Em progresso</span>
+      </div>
+      <div class="status-card" style="border:2px solid #E5E7EB;background:#fff;">
+        <div style="font-size:28px;margin-bottom:8px;">💉</div>
+        <div style="font-weight:600;font-size:13px;color:var(--pine);margin-bottom:6px;">Lembretes & Vacinas</div>
+        <span style="background:#E5E7EB;color:var(--stone);display:inline-block;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:600;">Planejado</span>
+      </div>
+      <div class="status-card" style="border:2px solid #E5E7EB;background:#fff;">
+        <div style="font-size:28px;margin-bottom:8px;">🆘</div>
+        <div style="font-weight:600;font-size:13px;color:var(--pine);margin-bottom:6px;">Triagem Emergência</div>
+        <span style="background:#E5E7EB;color:var(--stone);display:inline-block;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:600;">Planejado</span>
+      </div>
+    </div>
+
+    <!-- Gantt -->
+    <h3 style="font-family:'Playfair Display',serif;font-size:20px;color:var(--pine);margin-bottom:20px;">📅 Cronograma — 3 Semanas</h3>
+    <div class="gantt">
+      <div class="gantt-head">
+        <div style="padding:10px 18px;font-size:10px;font-weight:600;color:var(--moss);letter-spacing:.1em;text-transform:uppercase;border-right:1px solid rgba(255,255,255,.08);display:flex;align-items:center;">Atividade</div>
+        <div style="padding:10px 16px;font-size:11px;font-weight:600;color:#C9705A;font-family:'DM Mono',monospace;border-right:1px solid rgba(255,255,255,.08);display:flex;align-items:center;">● Semana 0 · Setup</div>
+        <div style="padding:10px 16px;font-size:11px;font-weight:600;color:#C9705A;font-family:'DM Mono',monospace;border-right:1px solid rgba(255,255,255,.08);display:flex;align-items:center;">● Semana 1 · Construção</div>
+        <div style="padding:10px 16px;font-size:11px;font-weight:600;color:#C9705A;font-family:'DM Mono',monospace;display:flex;align-items:center;">● Semana 2 · Lançamento</div>
+      </div>
+
+      <!-- ENTREGUE -->
+      <div class="gantt-divider" style="grid-template-columns:200px 1fr 1fr 1fr !important;">
+        <div style="grid-column:1/-1;padding:7px 18px;font-size:10px;font-weight:700;color:var(--forest);text-transform:uppercase;letter-spacing:.1em;">✓ CONCLUÍDO — Semana 0</div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid #f0f0f0;min-height:50px;background:#FAFAFA;">
+        <div class="gantt-label"><span style="font-size:15px;">🔧</span>Fluxo Base + WhatsApp</div>
+        <div class="gantt-cell"><div class="gantt-bar" style="width:100%;background:var(--sage);color:#fff;"><div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.6);margin-right:6px;flex-shrink:0;"></div>Integrado ✓</div></div>
+        <div class="gantt-cell" style="border-right:none;"></div><div class="gantt-cell" style="border-right:none;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid #f0f0f0;min-height:50px;background:#fff;">
+        <div class="gantt-label"><span style="font-size:15px;">🗂️</span>CRM + Cadastro de Pets</div>
+        <div class="gantt-cell"><div class="gantt-bar" style="width:100%;background:var(--sage);color:#fff;"><div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.6);margin-right:6px;flex-shrink:0;"></div>Configurado ✓</div></div>
+        <div class="gantt-cell" style="border-right:none;"></div><div class="gantt-cell" style="border-right:none;"></div>
+      </div>
+
+      <!-- SEMANA 1 -->
+      <div class="gantt-divider" style="grid-template-columns:200px 1fr 1fr 1fr !important;">
+        <div style="grid-column:1/-1;padding:7px 18px;font-size:10px;font-weight:700;color:var(--forest);text-transform:uppercase;letter-spacing:.1em;">→ SEMANA 1 · Agente Vita + Funcionalidades Core</div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid #f0f0f0;min-height:50px;background:#FAFAFA;">
+        <div class="gantt-label"><span style="font-size:15px;">📅</span>Módulo Agendamentos</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="width:70%;background:var(--terracotta);color:#fff;"><div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.6);margin-right:6px;flex-shrink:0;"></div>Em build</div></div>
+        <div class="gantt-cell" style="border-right:none;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid #f0f0f0;min-height:50px;background:#fff;">
+        <div class="gantt-label"><span style="font-size:15px;">🩺</span>Orientações Pós-Consulta</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="margin-left:40%;width:60%;background:var(--terracotta);color:#fff;"><div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.6);margin-right:6px;flex-shrink:0;"></div>Build</div></div>
+        <div class="gantt-cell" style="border-right:none;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid #f0f0f0;min-height:50px;background:#FAFAFA;">
+        <div class="gantt-label"><span style="font-size:15px;">🧪</span>Testes internos</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar" style="margin-left:70%;width:30%;background:var(--forest);color:#fff;">QA</div></div>
+        <div class="gantt-cell" style="border-right:none;"></div>
+      </div>
+
+      <!-- SEMANA 2 -->
+      <div class="gantt-divider" style="grid-template-columns:200px 1fr 1fr 1fr !important;">
+        <div style="grid-column:1/-1;padding:7px 18px;font-size:10px;font-weight:700;color:var(--forest);text-transform:uppercase;letter-spacing:.1em;">→ SEMANA 2 · Vacinas, Emergência & Go Live</div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid #f0f0f0;min-height:50px;background:#fff;">
+        <div class="gantt-label"><span style="font-size:15px;">💉</span>Lembretes & Vacinas</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell" style="border-right:none;"><div class="gantt-bar" style="width:100%;background:var(--terracotta);color:#fff;"><div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.6);margin-right:6px;flex-shrink:0;"></div>Construção</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid #f0f0f0;min-height:50px;background:#FAFAFA;">
+        <div class="gantt-label"><span style="font-size:15px;">🆘</span>Triagem Emergência</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell" style="border-right:none;"><div class="gantt-bar" style="margin-left:25%;width:75%;background:var(--terracotta);color:#fff;"><div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.6);margin-right:6px;flex-shrink:0;"></div>Construção</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid #f0f0f0;min-height:50px;background:#fff;">
+        <div class="gantt-label"><span style="font-size:15px;">🤝</span>Testes c/ equipe VitaPet</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell" style="border-right:none;"><div class="gantt-bar" style="margin-left:60%;width:40%;background:var(--forest);color:#fff;">Validação</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;min-height:50px;background:#FAFAFA;">
+        <div class="gantt-label"><span style="font-size:15px;">🚀</span>Go Live · Vita Online</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell" style="border-right:none;"><div class="gantt-bar" style="margin-left:88%;width:12%;background:var(--pine);color:#fff;min-width:36px;justify-content:center;">🚀</div></div>
+      </div>
+    </div>
+
+    <!-- Legenda -->
+    <div style="display:flex;gap:20px;flex-wrap:wrap;padding:14px 18px;background:#fff;border-radius:10px;border:1px solid #e5e7eb;margin-bottom:48px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--stone);"><div style="width:28px;height:11px;border-radius:3px;background:var(--sage);"></div>Concluído</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--stone);"><div style="width:28px;height:11px;border-radius:3px;background:var(--terracotta);"></div>Em construção</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--stone);"><div style="width:28px;height:11px;border-radius:3px;background:var(--forest);"></div>Testes / QA</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--stone);"><div style="width:28px;height:11px;border-radius:3px;background:var(--pine);"></div>Lançamento</div>
+    </div>
+
+    <!-- Próximo passo CTA -->
+    <div style="background:var(--dew);border:2px solid var(--mist);border-radius:16px;padding:32px;text-align:center;">
+      <div style="font-size:32px;margin-bottom:12px;">🐾</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:24px;color:var(--pine);margin-bottom:8px;">Pronto para implementar a Vita?</h3>
+      <p style="font-size:14px;color:var(--stone);max-width:520px;margin:0 auto 24px;line-height:1.7;font-weight:300;">Próximo passo: reunião de alinhamento para confirmar integrações e personalização da persona da Vita para a VitaPet.</p>
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <div style="padding:12px 24px;background:var(--pine);color:#fff;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;">📅 Agendar reunião</div>
+        <div style="padding:12px 24px;background:#fff;color:var(--pine);border:2px solid var(--sage);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;">💬 Falar com a equipe</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div style="width:32px;height:32px;background:var(--sage);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;">🐾</div>
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:14px;color:#fff;">VitaPet Clínica Veterinária</div>
+      <div style="font-size:10px;color:var(--moss);">Assistente Vita · Powered by BIOS Consulting Group</div>
+    </div>
+  </div>
+  <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--moss);opacity:.6;">Demo fictício para apresentação · 2026</div>
+</footer>
+
+<script>
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+// ── ACTIVE NAV ──
+const sections = document.querySelectorAll('[id]');
+const navBtns = document.querySelectorAll('.nav-btn');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('href') === '#' + entry.target.id);
+      });
+    }
+  });
+}, {threshold:.35});
+sections.forEach(s => observer.observe(s));
+
+// ── FAQ ACCORDION ──
+function toggleFaq(el) {
+  const item = el.closest('.faq-item');
+  const answer = item.querySelector('.faq-a');
+  const isOpen = item.classList.contains('open');
+  // fecha todos
+  document.querySelectorAll('.faq-item.open').forEach(i => {
+    i.classList.remove('open');
+    i.querySelector('.faq-a').classList.remove('open');
+  });
+  // abre o clicado (se estava fechado)
+  if (!isOpen) {
+    item.classList.add('open');
+    answer.classList.add('open');
+  }
+}
+
+// ── ANIMATE ON SCROLL ──
+const cards = document.querySelectorAll('.feat-card,.ba-card,.status-card');
+const cardObserver = new IntersectionObserver(entries => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      entry.target.style.animationDelay = (i * 0.05) + 's';
+      entry.target.style.animation = 'slideUp .5s ease both';
+      cardObserver.unobserve(entry.target);
+    }
+  });
+}, {threshold:.1});
+cards.forEach(c => cardObserver.observe(c));
+</script>
+
+</body>
+</html>
