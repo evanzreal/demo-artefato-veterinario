@@ -134,23 +134,30 @@ body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--in
 .status-card{border-radius:14px;padding:20px 16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:transform .15s;cursor:default;}
 .status-card:hover{transform:translateY(-2px);}
 
-/* ── CHAT DRAWER ── */
-@keyframes drawerIn{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes drawerOut{from{transform:translateY(0);opacity:1}to{transform:translateY(100%);opacity:0}}
-#chat-drawer.open{animation:drawerIn .3s cubic-bezier(.22,1,.36,1) both;}
-#chat-drawer.closing{animation:drawerOut .25s ease both;}
-.msg-bot{align-self:flex-start;max-width:82%;}
-.msg-user{align-self:flex-end;max-width:82%;}
-.bub-bot{background:#fff;color:#111;border-radius:0 12px 12px 12px;padding:10px 13px;font-size:13px;line-height:1.55;box-shadow:0 1px 3px rgba(0,0,0,.08);}
-.bub-user{background:#D0EBE5;color:#1a3d2b;border-radius:12px 0 12px 12px;padding:10px 13px;font-size:13px;line-height:1.55;box-shadow:0 1px 3px rgba(0,0,0,.08);}
-.msg-time{font-size:10px;color:#aaa;margin-top:3px;text-align:right;}
-.typing-bub{background:#fff;border-radius:0 12px 12px 12px;padding:10px 14px;display:inline-flex;gap:5px;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.08);}
-.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--sage);animation:pawBounce 1.1s infinite;}
-.typing-dot:nth-child(2){animation-delay:.18s;}
-.typing-dot:nth-child(3){animation-delay:.36s;}
-.chat-qr{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
-.chat-qr-btn{padding:5px 11px;background:var(--dew);border:1px solid var(--sage);border-radius:20px;font-size:12px;color:var(--forest);cursor:pointer;transition:background .15s;font-family:'DM Sans',sans-serif;}
-.chat-qr-btn:hover{background:var(--mist);}
+/* ── WHATSAPP SECTION ── */
+.wa-page{background:#f0ede8;}
+.wa-layout{display:grid;grid-template-columns:260px 1fr;gap:40px;align-items:start;}
+.sidebar-card{background:#fff;border-radius:16px;padding:20px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:14px;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.stat-box{background:var(--dew);border-radius:8px;padding:10px 12px;text-align:center;}
+.wa-phone{width:100%;max-width:420px;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.18),0 0 0 8px #1a1a1a,0 0 0 10px #2a2a2a;}
+.wa-head{background:#075E54;padding:11px 14px;display:flex;align-items:center;gap:11px;}
+.wa-body{background:#ECE5DD;padding:14px 11px;height:520px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;}
+.wa-foot{background:#F0F0F0;padding:9px 11px;display:flex;align-items:center;gap:8px;border-top:1px solid #ddd;}
+.wa-bubble-bot{display:flex;justify-content:flex-start;}
+.wa-bubble-user{display:flex;justify-content:flex-end;}
+.wa-bbl-bot{max-width:80%;padding:8px 11px;background:#fff;color:#111;border-radius:0 8px 8px 8px;box-shadow:0 1px 2px rgba(0,0,0,.1);font-size:13px;line-height:1.5;}
+.wa-bbl-user{max-width:80%;padding:8px 11px;background:#DCF8C6;color:#111;border-radius:8px 0 8px 8px;box-shadow:0 1px 2px rgba(0,0,0,.1);font-size:13px;line-height:1.5;}
+.wa-time{font-size:10px;color:#aaa;text-align:right;margin-top:3px;}
+.wa-typing{background:#fff;border-radius:0 8px 8px 8px;padding:10px 14px;display:inline-flex;gap:5px;align-items:center;box-shadow:0 1px 2px rgba(0,0,0,.1);}
+.wa-dot{width:6px;height:6px;border-radius:50%;background:#aaa;animation:pawBounce 1.1s infinite;}
+.wa-dot:nth-child(2){animation-delay:.18s;}
+.wa-dot:nth-child(3){animation-delay:.36s;}
+.wa-qr{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+.wa-qr-btn{padding:4px 10px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:20px;font-size:12px;color:#1B5E20;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;}
+.wa-qr-btn:hover{background:#C8E6C9;}
+@media(max-width:1024px){.wa-layout{grid-template-columns:1fr;gap:20px;}.wa-layout>div:first-child{position:static !important;}}
+@media(max-width:768px){.wa-phone{max-width:100%;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.15),0 0 0 4px #1a1a1a;}.wa-body{height:420px;}}
 
 /* ── FOOTER ── */
 footer{background:var(--pine);border-top:2px solid var(--sage);padding:28px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
@@ -218,36 +225,16 @@ footer{background:var(--pine);border-top:2px solid var(--sage);padding:28px 40px
     <a class="nav-btn" href="#funcionalidades">⚡ Funcionalidades</a>
     <a class="nav-btn" href="#comparativo">📊 Comparativo</a>
     <a class="nav-btn" href="#faq">💬 FAQ</a>
+    <a class="nav-btn" href="#conversacional">🐾 Conversar</a>
     <a class="nav-btn" href="#plano">📅 Próximos Passos</a>
   </div>
   <div style="display:flex;align-items:center;gap:12px;">
     <div class="nav-meta">Plexo Global × VitaPet · 2026</div>
-    <button onclick="openChat()" style="display:flex;align-items:center;gap:7px;padding:8px 16px;background:var(--sage);border:none;border-radius:8px;color:var(--pine);font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background .2s;white-space:nowrap;">
+    <a href="#conversacional" style="display:flex;align-items:center;gap:7px;padding:8px 16px;background:var(--sage);border:none;border-radius:8px;color:var(--pine);font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background .2s;white-space:nowrap;text-decoration:none;">
       <span style="font-size:15px;">🐾</span> Falar com a Vita
-    </button>
+    </a>
   </div>
 </nav>
-
-<!-- ── CHAT DRAWER ── -->
-<div id="chat-overlay" onclick="closeChat()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1100;backdrop-filter:blur(2px);"></div>
-<div id="chat-drawer" style="display:none;position:fixed;bottom:0;right:0;width:380px;height:600px;max-height:90vh;z-index:1200;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 -8px 40px rgba(0,0,0,.2);flex-direction:column;">
-  <!-- Drawer header -->
-  <div style="background:var(--pine);padding:14px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0;">
-    <div style="width:38px;height:38px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🐾</div>
-    <div style="flex:1;">
-      <div style="font-weight:600;font-size:14px;color:#fff;">Vita · VitaPet</div>
-      <div style="font-size:11px;color:var(--moss);" id="chat-status">● Online agora</div>
-    </div>
-    <button onclick="closeChat()" style="background:rgba(255,255,255,.1);border:none;border-radius:8px;width:30px;height:30px;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
-  </div>
-  <!-- Mensagens -->
-  <div id="chat-msgs" style="flex:1;overflow-y:auto;padding:16px 14px;background:#F0EDE8;display:flex;flex-direction:column;gap:8px;"></div>
-  <!-- Input -->
-  <div style="background:#F0F0F0;padding:10px 12px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;border-top:1px solid #ddd;">
-    <textarea id="chat-input" rows="1" placeholder="Digite sua mensagem..." onkeydown="handleKey(event)" oninput="autoResize(this)" style="flex:1;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:9px 14px;font-size:13px;font-family:'DM Sans',sans-serif;resize:none;outline:none;max-height:100px;line-height:1.4;"></textarea>
-    <button onclick="sendMsg()" id="send-btn" style="width:36px;height:36px;border-radius:50%;background:var(--forest);border:none;color:#fff;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .2s;">➤</button>
-  </div>
-</div>
 
 <!-- HERO -->
 <div class="hero" id="vita" style="scroll-margin-top:64px">
@@ -736,6 +723,105 @@ footer{background:var(--pine);border-top:2px solid var(--sage);padding:28px 40px
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SEÇÃO 5: FALAR COM A VITA -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="conversacional" style="scroll-margin-top:64px;background:#f0ede8;">
+  <div class="sec-head mid">
+    <div class="sec-inner">
+      <div class="sec-badge">🐾 &nbsp;05</div>
+      <h2 class="sec-title">Fale com a Vita agora</h2>
+      <p class="sec-desc">Experimente ao vivo o atendimento com IA — a mesma Vita que vai atender os tutores da VitaPet.</p>
+    </div>
+  </div>
+  <div class="canvas-mid wa-page">
+    <div class="wa-layout">
+
+      <!-- SIDEBAR -->
+      <div style="position:sticky;top:80px;">
+        <div class="sidebar-card">
+          <div style="font-family:'Playfair Display',serif;font-size:14px;color:var(--pine);margin-bottom:12px;">🐾 Capacidades da Vita</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:7px;background:var(--dew);">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0;"></div>
+              <span style="font-size:12px;color:var(--ink);">📅 Agendamento de consultas</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:7px;background:var(--dew);">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0;"></div>
+              <span style="font-size:12px;color:var(--ink);">💉 Calendário vacinal</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:7px;background:var(--dew);">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0;"></div>
+              <span style="font-size:12px;color:var(--ink);">🆘 Triagem de emergências</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:7px;background:var(--dew);">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0;"></div>
+              <span style="font-size:12px;color:var(--ink);">🩺 Orientações pós-consulta</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:7px;background:var(--dew);">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0;"></div>
+              <span style="font-size:12px;color:var(--ink);">📋 Histórico do pet</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:7px;background:var(--dew);">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0;"></div>
+              <span style="font-size:12px;color:var(--ink);">🌙 Atendimento 24 horas</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div style="font-family:'Playfair Display',serif;font-size:14px;color:var(--pine);margin-bottom:12px;">📊 Dados da Conversa</div>
+          <div class="stat-grid">
+            <div class="stat-box">
+              <div id="stat-msgs" style="font-size:20px;font-weight:700;color:var(--pine);line-height:1;">0</div>
+              <div style="font-size:10px;color:var(--stone);margin-top:3px;text-transform:uppercase;letter-spacing:.05em;">Mensagens</div>
+            </div>
+            <div class="stat-box">
+              <div id="stat-time" style="font-size:20px;font-weight:700;color:var(--pine);line-height:1;">0s</div>
+              <div style="font-size:10px;color:var(--stone);margin-top:3px;text-transform:uppercase;letter-spacing:.05em;">Duração</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card" id="sidebar-intent" style="display:none;">
+          <div style="font-family:'Playfair Display',serif;font-size:14px;color:var(--pine);margin-bottom:10px;">🎯 Contexto detectado</div>
+          <div id="sidebar-intent-body" style="font-size:12px;color:var(--stone);line-height:1.7;"></div>
+        </div>
+
+        <div style="padding:14px 16px;background:var(--dew);border-radius:12px;border:1px solid var(--mist);">
+          <div style="font-size:11px;color:var(--forest);font-weight:500;margin-bottom:4px;">🤖 Agente real conectado</div>
+          <div style="font-size:10px;color:var(--stone);font-family:'DM Mono',monospace;">vita.valorgarantido.com</div>
+        </div>
+      </div>
+
+      <!-- PHONE -->
+      <div style="display:flex;justify-content:center;">
+        <div class="wa-phone">
+          <!-- Header WhatsApp -->
+          <div class="wa-head">
+            <div style="width:38px;height:38px;background:var(--sage);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🐾</div>
+            <div style="flex:1;">
+              <div style="color:#fff;font-size:14px;font-weight:600;">Vita · VitaPet</div>
+              <div id="wa-status" style="color:rgba(255,255,255,.7);font-size:11px;">● online</div>
+            </div>
+            <div style="color:rgba(255,255,255,.8);display:flex;gap:14px;font-size:17px;">
+              <span>📹</span><span>📞</span><span>⋮</span>
+            </div>
+          </div>
+          <!-- Body mensagens -->
+          <div class="wa-body" id="wa-msgs"></div>
+          <!-- Footer input -->
+          <div class="wa-foot">
+            <span style="font-size:20px;color:#555;">😊</span>
+            <textarea id="wa-input" rows="1" placeholder="Mensagem" onkeydown="waHandleKey(event)" oninput="waAutoResize(this)" style="flex:1;background:#fff;border-radius:24px;padding:8px 16px;font-size:13px;font-family:'DM Sans',sans-serif;border:none;outline:none;resize:none;max-height:80px;line-height:1.4;"></textarea>
+            <button onclick="waSend()" id="wa-send-btn" style="width:40px;height:40px;border-radius:50%;background:#075E54;border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div style="display:flex;align-items:center;gap:12px;">
@@ -802,165 +888,152 @@ const cardObserver = new IntersectionObserver(entries => {
 }, {threshold:.1});
 cards.forEach(c => cardObserver.observe(c));
 
-// ── CHAT DRAWER ──
-const drawer = document.getElementById('chat-drawer');
-const overlay = document.getElementById('chat-overlay');
-const msgsEl = document.getElementById('chat-msgs');
-const inputEl = document.getElementById('chat-input');
-let chatOpen = false;
-let chatHistory = []; // {role:'user'|'assistant', content:''}
+// ── VITA WHATSAPP CHAT ──
+const AGENT_URL = 'https://vita.valorgarantido.com/chat';
+const waSessionId = 'demo-' + Math.random().toString(36).slice(2, 10);
+const waMsgs = document.getElementById('wa-msgs');
+const waInput = document.getElementById('wa-input');
+let waMsgCount = 0;
+let waStartTime = null;
+let waTimerInterval = null;
 
-function openChat() {
-  drawer.style.display = 'flex';
-  overlay.style.display = 'block';
-  drawer.classList.remove('closing');
-  drawer.classList.add('open');
-  chatOpen = true;
-  if (msgsEl.children.length === 0) {
-    setTimeout(() => addBotMsg(
-      'Olá! 👋 Sou a <strong>Vita</strong>, assistente da VitaPet.<br>Como posso ajudar você e seu pet hoje?',
-      ['📅 Agendar consulta', '💉 Vacinas', '🆘 Emergência', '📋 Histórico do pet']
-    ), 400);
-  }
-  setTimeout(() => inputEl.focus(), 350);
-}
-
-function closeChat() {
-  drawer.classList.remove('open');
-  drawer.classList.add('closing');
-  setTimeout(() => {
-    drawer.style.display = 'none';
-    overlay.style.display = 'none';
-    drawer.classList.remove('closing');
-    chatOpen = false;
-  }, 250);
-}
-
-function now() {
+function waNow() {
   return new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
 }
 
-function scrollBottom() {
-  msgsEl.scrollTop = msgsEl.scrollHeight;
+function waScroll() {
+  waMsgs.scrollTop = waMsgs.scrollHeight;
 }
 
-function addUserMsg(text) {
+function waAddUser(text) {
   const div = document.createElement('div');
-  div.className = 'msg-user';
-  div.innerHTML = `<div class="bub-user">${text}</div><div class="msg-time">${now()} ✓✓</div>`;
-  msgsEl.appendChild(div);
-  scrollBottom();
+  div.className = 'wa-bubble-user';
+  div.innerHTML = `<div class="wa-bbl-user">${escHtml(text)}<div class="wa-time">${waNow()} <span style="color:#34B7F1">✓✓</span></div></div>`;
+  waMsgs.appendChild(div);
+  waScroll();
+  waMsgCount++;
+  updateStats();
 }
 
-function addBotMsg(html, quickReplies = []) {
+function waAddBot(text, quickReplies = []) {
   const div = document.createElement('div');
-  div.className = 'msg-bot';
+  div.className = 'wa-bubble-bot';
   let qr = '';
   if (quickReplies.length) {
-    qr = `<div class="chat-qr">${quickReplies.map(r => `<span class="chat-qr-btn" onclick="sendQuick('${r}')">${r}</span>`).join('')}</div>`;
+    qr = `<div class="wa-qr">${quickReplies.map(r => `<span class="wa-qr-btn" onclick="waQuick('${r}')">${r}</span>`).join('')}</div>`;
   }
-  div.innerHTML = `<div class="bub-bot">${html}${qr}</div><div class="msg-time">${now()} ✓✓</div>`;
-  msgsEl.appendChild(div);
-  scrollBottom();
+  // Converte *bold* para <strong> e quebras de linha
+  const html = text.replace(/\*(.*?)\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+  div.innerHTML = `<div class="wa-bbl-bot"><div style="font-size:11px;font-weight:700;color:#2D5247;margin-bottom:3px;">🐾 Vita</div>${html}${qr}<div class="wa-time">${waNow()}</div></div>`;
+  waMsgs.appendChild(div);
+  waScroll();
+  waMsgCount++;
+  updateStats();
 }
 
-function addTyping() {
+function waAddTyping() {
   const div = document.createElement('div');
-  div.className = 'msg-bot';
-  div.id = 'typing-indicator';
-  div.innerHTML = `<div class="typing-bub"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
-  msgsEl.appendChild(div);
-  scrollBottom();
-  return div;
+  div.className = 'wa-bubble-bot';
+  div.id = 'wa-typing';
+  div.innerHTML = `<div class="wa-typing"><div class="wa-dot"></div><div class="wa-dot"></div><div class="wa-dot"></div></div>`;
+  waMsgs.appendChild(div);
+  waScroll();
 }
 
-function removeTyping() {
-  const t = document.getElementById('typing-indicator');
+function waRemoveTyping() {
+  const t = document.getElementById('wa-typing');
   if (t) t.remove();
 }
 
-function sendQuick(text) {
-  inputEl.value = text;
-  sendMsg();
+function waQuick(text) {
+  waInput.value = text;
+  waSend();
 }
 
-function autoResize(el) {
+function waAutoResize(el) {
   el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
 }
 
-function handleKey(e) {
+function waHandleKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    sendMsg();
+    waSend();
   }
 }
 
-async function sendMsg() {
-  const text = inputEl.value.trim();
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function updateStats() {
+  document.getElementById('stat-msgs').textContent = waMsgCount;
+  if (!waStartTime) {
+    waStartTime = Date.now();
+    waTimerInterval = setInterval(() => {
+      const s = Math.floor((Date.now() - waStartTime) / 1000);
+      document.getElementById('stat-time').textContent = s < 60 ? s + 's' : Math.floor(s/60) + 'm' + (s%60) + 's';
+    }, 1000);
+  }
+}
+
+async function waSend() {
+  const text = waInput.value.trim();
   if (!text) return;
-  inputEl.value = '';
-  inputEl.style.height = 'auto';
+  waInput.value = '';
+  waInput.style.height = 'auto';
 
-  addUserMsg(text);
-  chatHistory.push({role: 'user', content: text});
-
-  const typing = addTyping();
-  document.getElementById('send-btn').disabled = true;
+  waAddUser(text);
+  waAddTyping();
+  document.getElementById('wa-send-btn').disabled = true;
+  document.getElementById('wa-status').textContent = '● digitando...';
 
   try {
-    // ── CONECTAR SEU AGENTE AQUI ──
-    // Substitua a URL abaixo pelo endpoint do seu agente de IA
-    // O endpoint deve aceitar POST com { messages: [{role, content}] }
-    // e retornar { reply: "texto da resposta" }
-    const AGENT_URL = null; // ex: 'https://seu-agente.vercel.app/api/chat'
+    const res = await fetch(AGENT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ message: text, sessionId: waSessionId })
+    });
+    const data = await res.json();
+    waRemoveTyping();
+    const reply = data.output || data.reply || data.message || 'Não consegui uma resposta. Tente novamente.';
+    waAddBot(reply);
+    document.getElementById('wa-status').textContent = '● online';
 
-    let reply;
-    if (AGENT_URL) {
-      const res = await fetch(AGENT_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ messages: chatHistory })
-      });
-      const data = await res.json();
-      reply = data.reply || data.content || data.message || 'Sem resposta do agente.';
-    } else {
-      // Fallback demo enquanto agente não está conectado
-      reply = getDemoReply(text);
+    // Atualiza sidebar de contexto com palavras-chave detectadas
+    const keywords = [];
+    if (/agendar|consulta|marcar/i.test(text + reply)) keywords.push('📅 Agendamento');
+    if (/vacina|vacinação/i.test(text + reply)) keywords.push('💉 Vacinas');
+    if (/emergência|urgência|passando mal/i.test(text + reply)) keywords.push('🆘 Emergência');
+    if (/histórico|prontuário/i.test(text + reply)) keywords.push('📋 Histórico');
+    if (keywords.length) {
+      const si = document.getElementById('sidebar-intent');
+      si.style.display = 'block';
+      document.getElementById('sidebar-intent-body').innerHTML = keywords.map(k => `<div style="margin-bottom:4px;">${k}</div>`).join('');
     }
-
-    removeTyping();
-    chatHistory.push({role: 'assistant', content: reply});
-    addBotMsg(reply);
   } catch(err) {
-    removeTyping();
-    addBotMsg('Ops, tive um probleminha técnico. Tente novamente em instantes! 🙏');
-    console.error('Chat error:', err);
+    waRemoveTyping();
+    waAddBot('Ops, tive uma instabilidade. Tente novamente em instantes! 🙏');
+    document.getElementById('wa-status').textContent = '● online';
+    console.error('Vita API error:', err);
   } finally {
-    document.getElementById('send-btn').disabled = false;
-    inputEl.focus();
+    document.getElementById('wa-send-btn').disabled = false;
+    waInput.focus();
   }
 }
 
-// Respostas de demo (substituídas pelo agente real)
-function getDemoReply(text) {
-  const t = text.toLowerCase();
-  if (t.includes('agendar') || t.includes('consulta') || t.includes('marcar'))
-    return 'Claro! 📅 Para agendar, preciso de algumas informações:<br><br><strong>1.</strong> Qual o nome e espécie do seu pet?<br><strong>2.</strong> Qual o motivo da consulta?<br><strong>3.</strong> Você prefere manhã ou tarde?';
-  if (t.includes('vacina') || t.includes('vacinação'))
-    return '💉 As vacinas variam por espécie e idade do pet. Posso verificar o calendário vacinal do seu bichinho! Qual o nome e a espécie dele?';
-  if (t.includes('emergência') || t.includes('urgência') || t.includes('passando mal'))
-    return '🆘 <strong>Entendo que é urgente.</strong><br><br>Me conta os sintomas que o pet está apresentando para eu avaliar a gravidade e indicar o melhor caminho.';
-  if (t.includes('histórico') || t.includes('prontuário'))
-    return '📋 Para acessar o histórico, me informe o nome do pet cadastrado e o seu CPF ou telefone de contato.';
-  if (t.includes('horário') || t.includes('funcionamento') || t.includes('abrir'))
-    return '🕐 A VitaPet atende:<br><strong>Segunda a Sexta:</strong> 8h às 19h<br><strong>Sábados:</strong> 8h às 14h<br><strong>Plantão emergência:</strong> 24h';
-  if (t.includes('preço') || t.includes('valor') || t.includes('quanto'))
-    return '💰 Os valores variam conforme o tipo de consulta e procedimento. Para uma estimativa precisa, posso agendar uma avaliação — ela é gratuita para novos pacientes! 🐾';
-  if (t.includes('obrigad') || t.includes('valeu') || t.includes('ótimo'))
-    return 'Fico feliz em ajudar! 😊 Se precisar de mais alguma coisa, é só chamar. Cuide bem do seu pet! 🐾';
-  return 'Entendi! Deixa eu verificar isso para você. 🐾<br><br>Pode me dar mais detalhes para eu ajudar da melhor forma?';
-}
+// Mensagem de boas-vindas ao entrar na seção
+const waSection = document.getElementById('conversacional');
+const waObserver = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting && waMsgs.children.length === 0) {
+    setTimeout(() => waAddBot(
+      'Olá! 👋 Sou a *Vita*, assistente da VitaPet.\nComo posso ajudar você e seu pet hoje?',
+      ['📅 Agendar consulta', '💉 Vacinas', '🆘 Emergência', '📋 Histórico']
+    ), 500);
+    waObserver.disconnect();
+  }
+}, {threshold: 0.3});
+waObserver.observe(waSection);
 </script>
 
 </body>
